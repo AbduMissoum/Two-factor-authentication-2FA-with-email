@@ -8,7 +8,6 @@ const sequelize = new Sequelize(process.env.DATABASENAME,
  
 
  const db ={}
- console.log(db.User)//undefiend
- db.User= require('./Users')(Sequelize,sequelize)
-console.log(db.User)//user why is that ??
+ db.Users= require('./Users')(sequelize,Sequelize)
+console.log(db.User)
  module.exports={sequelize,db}

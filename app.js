@@ -1,44 +1,30 @@
 const { Sequelize } = require('sequelize');
 const express  = require('express')
 const app = express();
+const rateLimit = require('express-rate-limit')
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger.js'); // Import the Swagger spec
+const limiter = rateLimit({
+	windowMs: 5 * 60 * 1000, // 5 minutes
+	limit: 50, // Limit each IP to 50 requests per `window` (here, per 5 minutes).
+  message:"too many requests"
+	
+})
+
 require('dotenv').config();
-// Option 2: Passing parameters separately (sqlite)
-  // Option 3: Passing parameters separately (other dialects)
-  const { register,login, verify } = require('./controllers/UsersControllers/userController');
-const cookieParser = require("cookie-parser")
-  app.use(express.urlencoded({ extended: true }));
-  app.use(express.static(__dirname+'/public'))
-  app.use(cookieParser());
-async   function protectVerify(req,res,next)
-  {
-    if(req.cookies?.verify){
-    const idOfUser= Number(req.cookies.verify)
-
-    const user =await  User.findOne({where :{id:idOfUser}})
-   if(user && user?.verified==false) next();
-   else res.status(401).json({error:"not authorized"})
-    }
-    else
-    {
-      res.status(401).json({error:"not authorized"})
-    }
-
+const authRouter  = require('./routes/authRoutes.js')
     
+  const cookieParser = require("cookie-parser")
+  app.use(express.urlencoded({ extended: true }));
+  app.use(cookieParser());
 
-  }
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+  app.use('/api/v1/auth',authRouter)
+
 // Parse application/json
 app.use(express.json());
-  app.post('/login',login)
-  app.post('/register',register)
-  app.post('/verify',protectVerify,verify)
  
- app.get('/',(req,res)=>{
-  res.sendFile(__dirname+'/public/index.html')
- })
- app.get('/verify',(req,res)=>{
-  res.sendFile(__dirname+'/public/verification.html')
-
- })
+ 
 const {sequelize,db} = require('./db/models/index.js');
 sequelize.sync();
 sequelize.authenticate().then(()=>{
