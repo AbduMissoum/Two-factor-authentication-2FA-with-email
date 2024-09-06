@@ -27,7 +27,7 @@ This 2FA system enhances security by requiring users to authenticate themselves 
 - **Backend**:Nodejs ,express
 - **Database**:MySql
 - **Email Service**: NodeMailer
-- **ORM**: sequlize
+- **ORM**: sequalize
 - **APi doc** :swagger
 
 ## Installation
