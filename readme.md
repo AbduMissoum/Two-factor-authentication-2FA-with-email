@@ -8,7 +8,8 @@ This 2FA system enhances security by requiring users to authenticate themselves 
 - Email verification via a unique code sent to the user's email.
 - Authentication through verification code.
 - Verification process for users who are registered but not yet verified.
-
+##APi doc
+  to open Api doc   localhost:3000/api-doc
 ## Workflow
 
 ### 1. Registration
